@@ -25,9 +25,13 @@ function setup() {
 function draw() {
   background(21, 191, 61);
   switch(gameState) {
-    
+    case AUTH_STATE:
+      if (typeof showAuthUI === "function") showAuthUI();
+      return; // Do nothing else
+
     // Loads the menu.
     case 1:
+      if (typeof hideAuthUI === "function") hideAuthUI();
       titleAndImageSetup();
       mainMenuButtonsDisplay(true);
       mapButtonsDisplay(false);
@@ -38,6 +42,8 @@ function draw() {
       skillTreeButtonsDisplay(false);
       campaignButtonsDisplay(false);
       specialAbilityButtonDisplay(false);
+      // Show logout if user logged in
+      if (typeof showLogoutButton === "function" && currentUser) showLogoutButton();
       break;
 
     // Loads the campaign game mode.

@@ -2,11 +2,16 @@
 
 "use strict";
 
-let gameState = 1;
+const AUTH_STATE = 0;
+let gameState = AUTH_STATE;
 
 let playerScore = 0;
 let playerCash = 500;
-let playerBattleMedals = 50;
+let playerBattleMedals = 0; // Will be loaded after login
+
+// --- Auth system globals (defined in authSetup.js) ---
+// let currentUser = null;
+// let currentUserData = null;
 
 let baseHealthMax = 1000;
 let baseHealth = baseHealthMax;
