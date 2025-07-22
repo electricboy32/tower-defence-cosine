@@ -64,7 +64,7 @@ function register(username, pw) {
             projectileUpgrade: 0,
             damageUpgrade: 0,
             baseHealthUpgrade: 0,
-            enemySpeedUpgrade: 0,
+            enemySpeedUgrade: 0,
             enemyArmourUpgrade: 0,
             specialAbilityUpgrade: 0
         },
@@ -83,7 +83,7 @@ function saveCurrentUserData() {
     currentUserData.upgrades.projectileUpgrade = (typeof projectileUpgrade !== "undefined") ? projectileUpgrade : 0;
     currentUserData.upgrades.damageUpgrade = (typeof damageUpgrade !== "undefined") ? damageUpgrade : 0;
     currentUserData.upgrades.baseHealthUpgrade = (typeof baseHealthUpgrade !== "undefined") ? baseHealthUpgrade : 0;
-    currentUserData.upgrades.enemySpeedUpgrade = (typeof enemySpeedUpgrade !== "undefined") ? enemySpeedUpgrade : 0;
+    currentUserData.upgrades.enemySpeedUgrade = (typeof enemySpeedUgrade !== "undefined") ? enemySpeedUgrade : 0;
     currentUserData.upgrades.enemyArmourUpgrade = (typeof enemyArmourUpgrade !== "undefined") ? enemyArmourUpgrade : 0;
     currentUserData.upgrades.specialAbilityUpgrade = (typeof specialAbilityUpgrade !== "undefined") ? specialAbilityUpgrade : 0;
     // Save ratings if global 'levels' exists
@@ -110,7 +110,7 @@ function syncGlobalsWithUserData() {
         if (typeof projectileUpgrade !== "undefined") projectileUpgrade = currentUserData.upgrades.projectileUpgrade || 0;
         if (typeof damageUpgrade !== "undefined") damageUpgrade = currentUserData.upgrades.damageUpgrade || 0;
         if (typeof baseHealthUpgrade !== "undefined") baseHealthUpgrade = currentUserData.upgrades.baseHealthUpgrade || 0;
-        if (typeof enemySpeedUpgrade !== "undefined") enemySpeedUpgrade = currentUserData.upgrades.enemySpeedUpgrade || 0;
+        if (typeof enemySpeedUgrade !== "undefined") enemySpeedUgrade = currentUserData.upgrades.enemySpeedUgrade || 0;
         if (typeof enemyArmourUpgrade !== "undefined") enemyArmourUpgrade = currentUserData.upgrades.enemyArmourUpgrade || 0;
         if (typeof specialAbilityUpgrade !== "undefined") specialAbilityUpgrade = currentUserData.upgrades.specialAbilityUpgrade || 0;
     }
