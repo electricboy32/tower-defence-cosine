@@ -1,22 +1,32 @@
-// Authentication and User Data Management for Military Tower Defence Game
+// Node.js local file-based authentication for Military Tower Defence Game
 
-"use strict";
+const fs = require('fs');
+const path = require('path');
+const DATA_DIR = path.join(__dirname, '..', '..', 'data');
+const DATA_PATH = path.join(DATA_DIR, 'userinfo.json');
 
-// GLOBALS for user authentication and data
+// Ensure data directory and file exists
+if (!fs.existsSync(DATA_DIR)) fs.mkdirSync(DATA_DIR, { recursive: true });
+if (!fs.existsSync(DATA_PATH)) fs.writeFileSync(DATA_PATH, '{}');
+
 let currentUser = null;
 let currentUserData = null;
-
-// DOM elements for auth UI
 let authFormElements = {};
 
-// --- API helpers using axios ---
-const API = axios.create({ baseURL: "http://localhost:3000" });
-async function apiPost(path, payload) {
-    const { data } = await API.post(path, payload);
-    return data;
+function loadUsersFromFile() {
+    try {
+        const raw = fs.readFileSync(DATA_PATH, 'utf8');
+        return JSON.parse(raw || '{}');
+    } catch (e) {
+        return {};
+    }
 }
 
-// Simple password hashing (base64 for demo purposes)
+function saveUsersToFile(obj) {
+    fs.writeFileSync(DATA_PATH, JSON.stringify(obj, null, 2));
+}
+
+// Simple password hashing
 function hashPassword(pw) {
     try {
         return btoa(pw);
@@ -26,34 +36,42 @@ function hashPassword(pw) {
     }
 }
 
-// Attempt to login, returns true if successful, false otherwise
-async function login(username, pw) {
-    const res = await apiPost("/login", { username, password: hashPassword(pw) });
-    if (res.ok) {
+// Returns true if login success, else false
+function login(username, pw) {
+    const users = loadUsersFromFile();
+    if (users[username] && users[username].password === hashPassword(pw)) {
         currentUser = username;
-        currentUserData = res.data;
+        currentUserData = users[username];
         syncGlobalsWithUserData();
         return true;
-    } else {
-        return false;
     }
+    return false;
 }
 
-// Register a new user and log in
-async function register(username, pw) {
-    const reg = await apiPost("/register", { username, password: hashPassword(pw) });
-    if (reg.ok) {
-        // Auto-login after registration
-        return await login(username, pw);
-    } else {
-        return false;
-    }
+// Returns true if registration success (and logs in), else false
+function register(username, pw) {
+    const users = loadUsersFromFile();
+    if (users[username]) return false;
+    users[username] = {
+        password: hashPassword(pw),
+        medals: 0,
+        upgrades: {
+            projectileUpgrade: 0,
+            damageUpgrade: 0,
+            baseHealthUpgrade: 0,
+            enemySpeedUgrade: 0,
+            enemyArmourUpgrade: 0,
+            specialAbilityUpgrade: 0
+        },
+        ratings: []
+    };
+    saveUsersToFile(users);
+    return login(username, pw);
 }
 
-// Save current global variables back to currentUserData and disk
-async function saveCurrentUserData() {
+// Save in-memory globals to file
+function saveCurrentUserData() {
     if (!currentUser || !currentUserData) return;
-    // Update from globals
     currentUserData.medals = (typeof playerBattleMedals !== "undefined") ? playerBattleMedals : 0;
     if (typeof currentUserData.upgrades !== "object") currentUserData.upgrades = {};
     currentUserData.upgrades.projectileUpgrade = (typeof projectileUpgrade !== "undefined") ? projectileUpgrade : 0;
@@ -62,7 +80,6 @@ async function saveCurrentUserData() {
     currentUserData.upgrades.enemySpeedUgrade = (typeof enemySpeedUgrade !== "undefined") ? enemySpeedUgrade : 0;
     currentUserData.upgrades.enemyArmourUpgrade = (typeof enemyArmourUpgrade !== "undefined") ? enemyArmourUpgrade : 0;
     currentUserData.upgrades.specialAbilityUpgrade = (typeof specialAbilityUpgrade !== "undefined") ? specialAbilityUpgrade : 0;
-    // Save ratings if global 'levels' exists
     if (typeof levels !== "undefined" && Array.isArray(levels)) {
         currentUserData.ratings = levels.map(map =>
             map.map(level =>
@@ -70,16 +87,15 @@ async function saveCurrentUserData() {
             )
         );
     }
-    // Write to server
-    await apiPost("/save", { username: currentUser, data: currentUserData });
+    const users = loadUsersFromFile();
+    users[currentUser] = currentUserData;
+    saveUsersToFile(users);
 }
 
 // Load user data into global variables after login
 function syncGlobalsWithUserData() {
     if (!currentUserData) return;
-    // Medals
     if (typeof playerBattleMedals !== "undefined") playerBattleMedals = currentUserData.medals || 0;
-    // Upgrades
     if (currentUserData.upgrades) {
         if (typeof projectileUpgrade !== "undefined") projectileUpgrade = currentUserData.upgrades.projectileUpgrade || 0;
         if (typeof damageUpgrade !== "undefined") damageUpgrade = currentUserData.upgrades.damageUpgrade || 0;
@@ -88,7 +104,6 @@ function syncGlobalsWithUserData() {
         if (typeof enemyArmourUpgrade !== "undefined") enemyArmourUpgrade = currentUserData.upgrades.enemyArmourUpgrade || 0;
         if (typeof specialAbilityUpgrade !== "undefined") specialAbilityUpgrade = currentUserData.upgrades.specialAbilityUpgrade || 0;
     }
-    // Ratings: inject into levels
     if (currentUserData.ratings && typeof levels !== "undefined") {
         for (let i = 0; i < levels.length; i++) {
             for (let j = 0; j < (levels[i] ? levels[i].length : 0); j++) {
@@ -117,6 +132,10 @@ function showAuthUI() {
     // Center the form on canvas
     let centerX = 928, centerY = 432, formWidth = 330;
 
+    // Message paragraph (created first so exists for later)
+    authFormElements.message = createP('');
+    authFormElements.message.position(centerX - formWidth/2 + 25, centerY + 70);
+
     // Username input
     authFormElements.usernameInput = createInput('');
     authFormElements.usernameInput.position(centerX - formWidth/2 + 25, centerY - 60);
@@ -131,21 +150,19 @@ function showAuthUI() {
 
     // Login button
     authFormElements.loginBtn = createButton('Login');
-    authFormElements.loginBtn.position(centerX - formWidth/2 + 25, centerY + 30);
+    authFormElements.loginBtn.position(centerX - formWidth/2 + 80, centerY + 30);
     authFormElements.loginBtn.class("mainMenuButtonClass");
     authFormElements.loginBtn.mousePressed(function() {
         handleAuthSubmit("login");
     });
 
     // Register button
+    authFormElements.registerBtn = createButton('Register');
+    authFormElements.registerBtn.position(centerX - formWidth/2 + 185, centerY + 30);
     authFormElements.registerBtn.class("mainMenuButtonClass");
     authFormElements.registerBtn.mousePressed(function() {
         handleAuthSubmit("register");
     });
-
-    // Message
-    authFormElements.message = createP('');
-    authFormElements.message.position(centerX - formWidth/2 + 25, centerY + 70);
 
     // Attach a pseudo-form object for easier hide/show
     authFormElements.form = true;
@@ -163,7 +180,6 @@ function hideAuthUI() {
 
 // Hide all game UI buttons for auth state
 function hideAllGameDOM() {
-    // Try to hide standard buttons if they exist
     if (typeof mainMenuButtonsDisplay === "function") mainMenuButtonsDisplay(false);
     if (typeof mapButtonsDisplay === "function") mapButtonsDisplay(false);
     if (typeof returnToMenuButtonDisplay === "function") returnToMenuButtonDisplay(false);
@@ -173,7 +189,6 @@ function hideAllGameDOM() {
     if (typeof skillTreeButtonsDisplay === "function") skillTreeButtonsDisplay(false);
     if (typeof campaignButtonsDisplay === "function") campaignButtonsDisplay(false);
     if (typeof specialAbilityButtonDisplay === "function") specialAbilityButtonDisplay(false);
-    // Hide logout button if present
     if (window.logoutButton && typeof window.logoutButton.hide === "function") window.logoutButton.hide();
 }
 
@@ -183,36 +198,34 @@ function handleAuthSubmit(type) {
     let username = authFormElements.usernameInput.value().trim();
     let pw = authFormElements.passwordInput.value();
     if (!username || !pw) {
-        authFormElements.message.html("Please enter both fields.");
+        if (authFormElements.message) authFormElements.message.html("Please enter both fields.");
         return;
     }
     if (type === "login") {
         let ok = login(username, pw);
         if (ok) {
             hideAuthUI();
-            // Ensure user ratings array is initialized to match levels
             if (typeof levels !== "undefined" && (!currentUserData.ratings || currentUserData.ratings.length !== levels.length)) {
                 currentUserData.ratings = levels.map(map => map.map(() => 0));
                 saveCurrentUserData();
             }
             syncGlobalsWithUserData();
-            gameState = 1; // Go to main menu
+            gameState = 1;
         } else {
-            authFormElements.message.html("Invalid login.");
+            if (authFormElements.message) authFormElements.message.html("Invalid login.");
         }
     } else if (type === "register") {
         let ok = register(username, pw);
         if (ok) {
             hideAuthUI();
-            // Ensure user ratings array is initialized to match levels
             if (typeof levels !== "undefined" && (!currentUserData.ratings || currentUserData.ratings.length !== levels.length)) {
                 currentUserData.ratings = levels.map(map => map.map(() => 0));
                 saveCurrentUserData();
             }
             syncGlobalsWithUserData();
-            gameState = 1; // Go to main menu
+            gameState = 1;
         } else {
-            authFormElements.message.html("Username already exists.");
+            if (authFormElements.message) authFormElements.message.html("Username already exists.");
         }
     }
 }
@@ -228,7 +241,7 @@ function showLogoutButton() {
             saveCurrentUserData();
             currentUser = null;
             currentUserData = null;
-            gameState = 0; // Back to auth
+            gameState = 0;
             showAuthUI();
         });
     }
