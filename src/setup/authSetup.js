@@ -2,8 +2,17 @@
 
 const fs = require('fs');
 const path = require('path');
-const DATA_DIR = path.join(__dirname, '..', '..', 'data');
+const DATA_DIR = path.join(__dirname, '..', 'data');
 const DATA_PATH = path.join(DATA_DIR, 'userinfo.json');
+
+// Show a SweetAlert2 modal, fallback to alert if Swal is missing
+function showGameDialog(title, message, icon = 'warning') {
+  if (typeof Swal !== 'undefined') {
+    Swal.fire({ title, text: message, icon, confirmButtonText: 'OK' });
+  } else {
+    alert(title + "\n\n" + message); // graceful fallback
+  }
+}
 
 // Ensure data directory and file exists
 if (!fs.existsSync(DATA_DIR)) fs.mkdirSync(DATA_DIR, { recursive: true });
@@ -205,16 +214,16 @@ function handleAuthSubmit(type) {
     let pw = authFormElements.passwordInput.value();
     const users = loadUsersFromFile();
     if (!username || !pw) {
-        alert("Please enter both fields.");
+        showGameDialog('Missing Information', 'Please enter both fields.');
         return;
     }
     if (type === "login") {
         if (!users[username]) {
-            alert("Account not found. Please register.");
+            showGameDialog('Account Not Found', 'Account not found. Please register.');
             return;
         }
         if (users[username].password !== hashPassword(pw)) {
-            alert("Incorrect password.");
+            showGameDialog('Incorrect Password', 'Incorrect password.');
             return;
         }
         let ok = login(username, pw);
@@ -229,7 +238,7 @@ function handleAuthSubmit(type) {
         }
     } else if (type === "register") {
         if (users[username]) {
-            alert("Username already exists.");
+            showGameDialog('Username Already Exists', 'Username already exists.');
             return;
         }
         let ok = register(username, pw);
