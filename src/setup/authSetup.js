@@ -13,26 +13,7 @@ let currentUser = null;
 let currentUserData = null;
 let authFormElements = {};
 
-// --- Custom Popup Overlay ---
-let activePopup = null;
-function showPopup(message) {
-  if (activePopup) activePopup.remove();
-  const overlay = createDiv();
-  overlay.class('popupOverlay');
-  const box = createDiv();
-  box.class('popupBox');
-  box.parent(overlay);
-  box.html(`<p>${message}</p>`);
-  const btn = createButton('OK');
-  btn.parent(box);
-  btn.class('authButtonClass');
-  btn.size(140,45);
-  btn.mousePressed(() => {
-     overlay.remove();
-     activePopup = null;
-  });
-  activePopup = overlay;
-}
+// (custom popup overlay code removed, revert to alert)
 
 function loadUsersFromFile() {
     try {
@@ -224,16 +205,16 @@ function handleAuthSubmit(type) {
     let pw = authFormElements.passwordInput.value();
     const users = loadUsersFromFile();
     if (!username || !pw) {
-        showPopup("Please enter both fields.");
+        alert("Please enter both fields.");
         return;
     }
     if (type === "login") {
         if (!users[username]) {
-            showPopup("Account not found. Please register.");
+            alert("Account not found. Please register.");
             return;
         }
         if (users[username].password !== hashPassword(pw)) {
-            showPopup("Incorrect password.");
+            alert("Incorrect password.");
             return;
         }
         let ok = login(username, pw);
@@ -248,7 +229,7 @@ function handleAuthSubmit(type) {
         }
     } else if (type === "register") {
         if (users[username]) {
-            showPopup("Username already exists.");
+            alert("Username already exists.");
             return;
         }
         let ok = register(username, pw);
