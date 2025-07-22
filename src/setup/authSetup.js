@@ -138,31 +138,38 @@ function showAuthUI() {
 
     // Username input
     authFormElements.usernameInput = createInput('');
-    authFormElements.usernameInput.position(centerX - formWidth/2 + 25, centerY - 60);
+    authFormElements.usernameInput.position(centerX - 150, centerY - 90);
     authFormElements.usernameInput.attribute("placeholder", "Username");
-    authFormElements.usernameInput.class("mainMenuButtonClass");
+    authFormElements.usernameInput.class("authInputClass");
+    authFormElements.usernameInput.size(300, 50);
 
     // Password input
     authFormElements.passwordInput = createInput('', 'password');
-    authFormElements.passwordInput.position(centerX - formWidth/2 + 25, centerY - 20);
+    authFormElements.passwordInput.position(centerX - 150, centerY - 30);
     authFormElements.passwordInput.attribute("placeholder", "Password");
-    authFormElements.passwordInput.class("mainMenuButtonClass");
+    authFormElements.passwordInput.class("authInputClass");
+    authFormElements.passwordInput.size(300, 50);
 
     // Login button
     authFormElements.loginBtn = createButton('Login');
-    authFormElements.loginBtn.position(centerX - formWidth/2 + 80, centerY + 30);
-    authFormElements.loginBtn.class("mainMenuButtonClass");
+    authFormElements.loginBtn.position(centerX - 210, centerY + 20);
+    authFormElements.loginBtn.class("authButtonClass");
+    authFormElements.loginBtn.size(200, 50);
     authFormElements.loginBtn.mousePressed(function() {
         handleAuthSubmit("login");
     });
 
     // Register button
     authFormElements.registerBtn = createButton('Register');
-    authFormElements.registerBtn.position(centerX - formWidth/2 + 185, centerY + 30);
-    authFormElements.registerBtn.class("mainMenuButtonClass");
+    authFormElements.registerBtn.position(centerX + 10, centerY + 20);
+    authFormElements.registerBtn.class("authButtonClass");
+    authFormElements.registerBtn.size(200, 50);
     authFormElements.registerBtn.mousePressed(function() {
         handleAuthSubmit("register");
     });
+
+    // Move message paragraph to centerY+90.
+    authFormElements.message.position(centerX - 150, centerY + 90);
 
     // Attach a pseudo-form object for easier hide/show
     authFormElements.form = true;

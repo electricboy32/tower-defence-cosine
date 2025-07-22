@@ -75,3 +75,22 @@ canvas {
   padding: 20px;
   background: rgb(201, 87, 191);
 }
+
+.authInputClass {
+  height: 50px;
+  width: 300px;
+  font-size: 18px;
+  border: none;
+  border-radius: 12px;
+  padding: 10px;
+  background: rgb(235, 235, 235);
+}
+.authButtonClass {
+  height: 50px;
+  width: 200px;
+  font-size: 18px;
+  border: none;
+  border-radius: 25px;
+  padding: 10px;
+  background: rgb(63, 202, 202);
+}
