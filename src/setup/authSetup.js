@@ -13,6 +13,27 @@ let currentUser = null;
 let currentUserData = null;
 let authFormElements = {};
 
+// --- Custom Popup Overlay ---
+let activePopup = null;
+function showPopup(message) {
+  if (activePopup) activePopup.remove();
+  const overlay = createDiv();
+  overlay.class('popupOverlay');
+  const box = createDiv();
+  box.class('popupBox');
+  box.parent(overlay);
+  box.html(`<p>${message}</p>`);
+  const btn = createButton('OK');
+  btn.parent(box);
+  btn.class('authButtonClass');
+  btn.size(140,45);
+  btn.mousePressed(() => {
+     overlay.remove();
+     activePopup = null;
+  });
+  activePopup = overlay;
+}
+
 function loadUsersFromFile() {
     try {
         const raw = fs.readFileSync(DATA_PATH, 'utf8');
@@ -201,19 +222,18 @@ function handleAuthSubmit(type) {
     if (!authFormElements.usernameInput || !authFormElements.passwordInput) return;
     let username = authFormElements.usernameInput.value().trim();
     let pw = authFormElements.passwordInput.value();
-    // (message element removed)
+    const users = loadUsersFromFile();
     if (!username || !pw) {
-        alert("Please enter both fields.");
+        showPopup("Please enter both fields.");
         return;
     }
-    const users = loadUsersFromFile();
     if (type === "login") {
         if (!users[username]) {
-            alert("Account not found. Please register.");
+            showPopup("Account not found. Please register.");
             return;
         }
         if (users[username].password !== hashPassword(pw)) {
-            alert("Incorrect password.");
+            showPopup("Incorrect password.");
             return;
         }
         let ok = login(username, pw);
@@ -228,7 +248,7 @@ function handleAuthSubmit(type) {
         }
     } else if (type === "register") {
         if (users[username]) {
-            alert("Username already exists.");
+            showPopup("Username already exists.");
             return;
         }
         let ok = register(username, pw);
@@ -241,6 +261,8 @@ function handleAuthSubmit(type) {
             syncGlobalsWithUserData();
             gameState = 1;
         }
+    }
+}
     }
 }
 
