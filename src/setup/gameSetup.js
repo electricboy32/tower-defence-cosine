@@ -224,14 +224,11 @@ function drawMap() {
 
 // Displays the user score, cash and battle medals.
 function displayInformation() {
-    // ... other logic ...
-    let medalsAwarded = 0;
-    if (playerScore &gt;= 50000) {
-        medalsAwarded = Math.floor(playerScore / 50000);
-        playerBattleMedals += medalsAwarded;
-        if (typeof saveCurrentUserData === "function") saveCurrentUserData();
-    }
-    // ... remaining logic ...
+  fill("black");
+  textSize(25);
+  text("🔢Score: " + playerScore, 1640, 100);
+  text("💵Cash: " + playerCash, 1640, 140);
+  text("🎖️Medals: " + playerBattleMedals, 1640, 180);
 }
 
 // Displays the base health as a gradient and ends the game if the health is zero.
