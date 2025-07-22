@@ -54,6 +54,8 @@ function campaignButtonsDisplay(display) {
 
 // Displays star ratings for all campaign levels for the current map
 function displayStarRatings() {
+    fill("black");
+    textSize(30);
     let nLevels = levels[0].length;
     for (let i = 0; i < nLevels; i++) {
         let rating = levels[chosenMapInt][i].rating || 0;
