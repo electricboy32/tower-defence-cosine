@@ -119,9 +119,7 @@ function draw() {
 
     // Loads the tutorial.
     case 4:
-      mainMenuButtonsDisplay(false);
-      returnToMenuButtonDisplay(true);
-
+      if (typeof showTutorial === "function") showTutorial();
       break;
 
     // Loads the skill tree.
