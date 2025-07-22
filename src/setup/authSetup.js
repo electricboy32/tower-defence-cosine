@@ -132,21 +132,22 @@ function showAuthUI() {
     // Center the form on canvas
     let centerX = 928, centerY = 432, formWidth = 330;
 
-    // Message paragraph (created first so exists for later)
+    // Message paragraph: create but hide (used for future expansion only)
     authFormElements.message = createP('');
     authFormElements.message.class('authMessageClass');
     authFormElements.message.position(centerX - 150, centerY + 90);
+    authFormElements.message.hide();
 
     // Username input
     authFormElements.usernameInput = createInput('');
-    authFormElements.usernameInput.position(centerX - 160, centerY - 110);
+    authFormElements.usernameInput.position(centerX - 160, centerY - 150);
     authFormElements.usernameInput.attribute("placeholder", "Username");
     authFormElements.usernameInput.class("authInputClass");
     authFormElements.usernameInput.size(320, 50);
 
     // Password input
     authFormElements.passwordInput = createInput('', 'password');
-    authFormElements.passwordInput.position(centerX - 160, centerY - 40);
+    authFormElements.passwordInput.position(centerX - 160, centerY - 60);
     authFormElements.passwordInput.attribute("placeholder", "Password");
     authFormElements.passwordInput.class("authInputClass");
     authFormElements.passwordInput.size(320, 50);
@@ -162,7 +163,7 @@ function showAuthUI() {
 
     // Register button
     authFormElements.registerBtn = createButton('Register');
-    authFormElements.registerBtn.position(centerX - 100, centerY + 100);
+    authFormElements.registerBtn.position(centerX - 100, centerY + 110);
     authFormElements.registerBtn.class("authButtonClass");
     authFormElements.registerBtn.size(240, 50);
     authFormElements.registerBtn.mousePressed(function() {
@@ -205,18 +206,19 @@ function handleAuthSubmit(type) {
     if (!authFormElements.usernameInput || !authFormElements.passwordInput) return;
     let username = authFormElements.usernameInput.value().trim();
     let pw = authFormElements.passwordInput.value();
+    if (authFormElements.message) authFormElements.message.hide();
     if (!username || !pw) {
-        if (authFormElements.message) authFormElements.message.html("Please enter both fields.");
+        alert("Please enter both fields.");
         return;
     }
     const users = loadUsersFromFile();
     if (type === "login") {
         if (!users[username]) {
-            if (authFormElements.message) authFormElements.message.html("Account not found. Please register.");
+            alert("Account not found. Please register.");
             return;
         }
         if (users[username].password !== hashPassword(pw)) {
-            if (authFormElements.message) authFormElements.message.html("Incorrect password.");
+            alert("Incorrect password.");
             return;
         }
         let ok = login(username, pw);
@@ -231,7 +233,7 @@ function handleAuthSubmit(type) {
         }
     } else if (type === "register") {
         if (users[username]) {
-            if (authFormElements.message) authFormElements.message.html("Username already exists.");
+            alert("Username already exists.");
             return;
         }
         let ok = register(username, pw);
