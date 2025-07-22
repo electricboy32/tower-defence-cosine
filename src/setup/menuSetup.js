@@ -79,15 +79,6 @@ function mainMenuButtonsDisplay(display) {
         // Hide logout button if present
         if (typeof hideLogoutButton === "function") hideLogoutButton();
     }
-} else {
-        campaignButton.hide();
-        arcadeButton.hide();
-        tutorialButton.hide();
-        skillTreeButton.hide();
-        settingsButton.hide();
-        // Hide logout button if present
-        if (typeof hideLogoutButton === "function") hideLogoutButton();
-    }
 }
 
 // When the menu button is clicked on any part of the game, the menu loads (because gameState is changed to 1).
