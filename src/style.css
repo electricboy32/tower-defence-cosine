@@ -94,3 +94,21 @@ canvas {
   padding: 10px;
   background: rgb(63, 202, 202);
 }
+
+.authMessageClass {
+  color: rgb(255, 50, 50);
+  background: rgba(255, 200, 200, 0.8);
+  padding: 8px 12px;
+  border-radius: 8px;
+  width: 300px;
+  text-align: center;
+  font-weight: bold;
+}
+.logoutButtonClass {
+  height: 40px;
+  width: 150px;
+  font-size: 16px;
+  border: none;
+  border-radius: 20px;
+  background: rgb(150, 150, 150);
+}

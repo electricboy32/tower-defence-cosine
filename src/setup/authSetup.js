@@ -134,7 +134,8 @@ function showAuthUI() {
 
     // Message paragraph (created first so exists for later)
     authFormElements.message = createP('');
-    authFormElements.message.position(centerX - formWidth/2 + 25, centerY + 70);
+    authFormElements.message.class('authMessageClass');
+    authFormElements.message.position(centerX - 150, centerY + 90);
 
     // Username input
     authFormElements.usernameInput = createInput('');
@@ -152,7 +153,7 @@ function showAuthUI() {
 
     // Login button
     authFormElements.loginBtn = createButton('Login');
-    authFormElements.loginBtn.position(centerX - 210, centerY + 20);
+    authFormElements.loginBtn.position(centerX - 240, centerY + 20);
     authFormElements.loginBtn.class("authButtonClass");
     authFormElements.loginBtn.size(200, 50);
     authFormElements.loginBtn.mousePressed(function() {
@@ -161,7 +162,7 @@ function showAuthUI() {
 
     // Register button
     authFormElements.registerBtn = createButton('Register');
-    authFormElements.registerBtn.position(centerX + 10, centerY + 20);
+    authFormElements.registerBtn.position(centerX + 40, centerY + 20);
     authFormElements.registerBtn.class("authButtonClass");
     authFormElements.registerBtn.size(200, 50);
     authFormElements.registerBtn.mousePressed(function() {
@@ -208,7 +209,16 @@ function handleAuthSubmit(type) {
         if (authFormElements.message) authFormElements.message.html("Please enter both fields.");
         return;
     }
+    const users = loadUsersFromFile();
     if (type === "login") {
+        if (!users[username]) {
+            if (authFormElements.message) authFormElements.message.html("Account not found. Please register.");
+            return;
+        }
+        if (users[username].password !== hashPassword(pw)) {
+            if (authFormElements.message) authFormElements.message.html("Incorrect password.");
+            return;
+        }
         let ok = login(username, pw);
         if (ok) {
             hideAuthUI();
@@ -218,10 +228,12 @@ function handleAuthSubmit(type) {
             }
             syncGlobalsWithUserData();
             gameState = 1;
-        } else {
-            if (authFormElements.message) authFormElements.message.html("Invalid login.");
         }
     } else if (type === "register") {
+        if (users[username]) {
+            if (authFormElements.message) authFormElements.message.html("Username already exists.");
+            return;
+        }
         let ok = register(username, pw);
         if (ok) {
             hideAuthUI();
@@ -231,8 +243,6 @@ function handleAuthSubmit(type) {
             }
             syncGlobalsWithUserData();
             gameState = 1;
-        } else {
-            if (authFormElements.message) authFormElements.message.html("Username already exists.");
         }
     }
 }
@@ -243,7 +253,8 @@ function showLogoutButton() {
     if (!window.logoutButton) {
         window.logoutButton = createButton("Logout");
         window.logoutButton.position(40, 22);
-        window.logoutButton.class("logout-btn");
+        window.logoutButton.class("logoutButtonClass");
+        window.logoutButton.size(150, 40);
         window.logoutButton.mousePressed(function() {
             saveCurrentUserData();
             currentUser = null;
