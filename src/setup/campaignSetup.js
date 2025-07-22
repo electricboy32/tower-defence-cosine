@@ -119,8 +119,8 @@ function checkCampaignLevelComplete() {
     }
 
     // 4. Award medals and update user data
-    if (typeof battleMedals !== "undefined") {
-        battleMedals += newRating;
+    if (typeof playerBattleMedals !== "undefined") {
+        playerBattleMedals += newRating;
     }
     if (typeof saveCurrentUserData === "function") {
         saveCurrentUserData();
@@ -130,9 +130,8 @@ function checkCampaignLevelComplete() {
     alert("Level complete! You earned " + newRating + " star(s). Medals awarded: " + newRating);
 
     // 6. Reset for return to level-select
-    // (Assume clearEnemies, resetMaps exist elsewhere)
-    if (typeof clearEnemies === "function") clearEnemies();
-    if (typeof resetMaps === "function") resetMaps();
+    enemyClear();
+    setBaseHealth(levels[chosenMapInt][0].baseHealth);
     chosenLevel = -1;
 
     // 7. Reset campaignCheck so next setEnemies will run
