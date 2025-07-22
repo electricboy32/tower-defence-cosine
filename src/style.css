@@ -105,6 +105,7 @@ canvas {
   width: 300px;
   text-align: center;
   font-weight: bold;
+  display: none;
 }
 .logoutButtonClass {
   height: 40px;
