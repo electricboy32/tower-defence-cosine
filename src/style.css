@@ -1,0 +1,77 @@
+/* Written automatically by the p5.vscode extension by Sam Lavigne and edited by James Baldwin for my Computer Science NEA Coursework. 
+Started on 14/06/23. This is the program's CSS file and contains all the styling for the HTML and buttons. */
+
+html, body {
+  margin: 0;
+  padding: 0;
+}
+
+canvas {
+  display: block;
+}
+
+#returnToMenuButtonID {
+  height: 50px;
+  width: 200px;
+  font-size: 20px;
+  border: none;
+  border-radius: 25px;
+  padding: 10px;
+  background: rgb(63, 202, 202);
+}
+
+.mainMenuButtonClass {
+  height: 75px;
+  width: 400px;
+  font-size: 20px;
+  border: none;
+  border-radius: 25px;
+  padding: 20px;
+  background: rgb(63, 202, 202);
+}
+
+.selectTowerButtonClass {
+  height: 50px;
+  width: 200px;
+  font-size: 18px;
+  border: none;
+  border-radius: 25px;
+  padding: 10px;
+  background: rgb(63, 202, 202);
+}
+
+.towerButtonClass {
+  height: 100px;
+  width: 100px;
+  font-size: 16px;
+  border: solid;
+  border-width: 1px;
+  background: rgb(63, 202, 202);
+}
+
+.towerRangeSpecialAbility {
+  height: 80px;
+  width: 100px;
+  font-size: 16px;
+  border: solid;
+  border-radius: 15px;
+  background: rgb(63, 202, 202);
+}
+
+.skillTreeButtonClass {
+  height: 75px;
+  width: 400px;
+  font-size: 20px;
+  border: none;
+  padding: 20px;
+  background: rgb(141, 91, 15);
+}
+
+.campaignButtonClass {
+  height: 80px;
+  width: 150px;
+  font-size: 20px;
+  border: none;
+  padding: 20px;
+  background: rgb(201, 87, 191);
+}

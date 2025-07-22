@@ -1,0 +1,12 @@
+// Written automatically by the p5.vscode extension by Sam Lavigne. Created on 14/06/23. Contains configuration settings.
+
+{
+  "compilerOptions": {
+    "target": "es6"
+  },
+  "include": [
+    "*.js",
+    "**/*.js",
+    "c:\\Users\\24752\\.vscode\\extensions\\samplavigne.p5-vscode-1.2.13\\p5types\\global.d.ts"
+  ]
+}
