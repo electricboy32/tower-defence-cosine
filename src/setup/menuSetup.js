@@ -139,6 +139,7 @@ function returnToMenuButtonFunction() {
         changeTowerColour(true, 10);
         TRAP.placed = false;
         playerBattleMedals += Math.floor(playerScore / 50000);
+        if (typeof saveCurrentUserData === "function") saveCurrentUserData();
         playerScore = 0;
         playerCash = 500;
         gameState = 1;

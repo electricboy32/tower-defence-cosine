@@ -173,5 +173,6 @@ function skillTreeButtonsFunction(upgrade, type) {
                 specialAbilityUpgrade++;
                 break;
         }
+        if (typeof saveCurrentUserData === "function") saveCurrentUserData();
     }
 }

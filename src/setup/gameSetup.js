@@ -224,11 +224,14 @@ function drawMap() {
 
 // Displays the user score, cash and battle medals.
 function displayInformation() {
-  fill("black");
-  textSize(25);
-  text("🔢Score: " + playerScore, 1640, 100);
-  text("💵Cash: " + playerCash, 1640, 140);
-  text("🎖️Medals: " + playerBattleMedals, 1640, 180);
+    // ... other logic ...
+    let medalsAwarded = 0;
+    if (playerScore &gt;= 50000) {
+        medalsAwarded = Math.floor(playerScore / 50000);
+        playerBattleMedals += medalsAwarded;
+        if (typeof saveCurrentUserData === "function") saveCurrentUserData();
+    }
+    // ... remaining logic ...
 }
 
 // Displays the base health as a gradient and ends the game if the health is zero.
@@ -384,6 +387,7 @@ function checkBaseHealth() {
     campaignCheck = false;
     let tempText = "The game is over. Your score was " + playerScore.toString() + ". Press 'Ok' to restart or press 'Cancel' to return to the menu and/or select another map.";
     playerBattleMedals += Math.floor(playerScore / 50000);
+    if (typeof saveCurrentUserData === "function") saveCurrentUserData();
     playerScore = 0;
     playerCash = 500;
     baseHealth = baseHealthMax;
