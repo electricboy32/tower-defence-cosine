@@ -214,16 +214,16 @@ function handleAuthSubmit(type) {
     let pw = authFormElements.passwordInput.value();
     const users = loadUsersFromFile();
     if (!username || !pw) {
-        showGameDialog('Missing Information', 'Please enter both fields.');
+        showPopup("Please enter both fields.");
         return;
     }
     if (type === "login") {
         if (!users[username]) {
-            showGameDialog('Account Not Found', 'Account not found. Please register.');
+            showPopup("Account not found. Please register.");
             return;
         }
         if (users[username].password !== hashPassword(pw)) {
-            showGameDialog('Incorrect Password', 'Incorrect password.');
+            showPopup("Incorrect password.");
             return;
         }
         let ok = login(username, pw);
@@ -238,7 +238,7 @@ function handleAuthSubmit(type) {
         }
     } else if (type === "register") {
         if (users[username]) {
-            showGameDialog('Username Already Exists', 'Username already exists.');
+            showPopup("Username already exists.");
             return;
         }
         let ok = register(username, pw);
