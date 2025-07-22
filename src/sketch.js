@@ -25,9 +25,13 @@ function setup() {
 function draw() {
   background(21, 191, 61);
   switch(gameState) {
-    
+    case AUTH_STATE:
+      if (typeof showAuthUI === "function") showAuthUI();
+      return; // Do nothing else
+
     // Loads the menu.
     case 1:
+      if (typeof hideAuthUI === "function") hideAuthUI();
       titleAndImageSetup();
       mainMenuButtonsDisplay(true);
       mapButtonsDisplay(false);
@@ -38,6 +42,8 @@ function draw() {
       skillTreeButtonsDisplay(false);
       campaignButtonsDisplay(false);
       specialAbilityButtonDisplay(false);
+      // Show logout if user logged in
+      if (typeof showLogoutButton === "function" && currentUser) showLogoutButton();
       break;
 
     // Loads the campaign game mode.
@@ -71,6 +77,7 @@ function draw() {
         specialForcesUpdate();
         enemySetup(0);
         enemyUpdateCampaign();
+        checkCampaignLevelComplete(); // <-- Call after enemy updates for campaign only
         showSpecialForces();
         showAirstrike();
         showTrap();
@@ -112,9 +119,7 @@ function draw() {
 
     // Loads the tutorial.
     case 4:
-      mainMenuButtonsDisplay(false);
-      returnToMenuButtonDisplay(true);
-
+      if (typeof showTutorial === "function") showTutorial();
       break;
 
     // Loads the skill tree.

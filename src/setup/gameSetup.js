@@ -384,6 +384,7 @@ function checkBaseHealth() {
     campaignCheck = false;
     let tempText = "The game is over. Your score was " + playerScore.toString() + ". Press 'Ok' to restart or press 'Cancel' to return to the menu and/or select another map.";
     playerBattleMedals += Math.floor(playerScore / 50000);
+    if (typeof saveCurrentUserData === "function") saveCurrentUserData();
     playerScore = 0;
     playerCash = 500;
     baseHealth = baseHealthMax;

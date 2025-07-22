@@ -68,17 +68,24 @@ function mainMenuButtonsDisplay(display) {
         tutorialButton.show();
         skillTreeButton.show();
         settingsButton.show();
+        // Show logout if logged in
+        if (typeof showLogoutButton === "function" && currentUser) showLogoutButton();
     } else {
         campaignButton.hide();
         arcadeButton.hide();
         tutorialButton.hide();
         skillTreeButton.hide();
         settingsButton.hide();
+        // Hide logout button if present
+        if (typeof hideLogoutButton === "function") hideLogoutButton();
     }
 }
 
 // When the menu button is clicked on any part of the game, the menu loads (because gameState is changed to 1).
 function returnToMenuButtonFunction() {
+    // Save user data on menu return
+    if (typeof saveCurrentUserData === "function") saveCurrentUserData();
+
     if ((gameState == 2 || gameState == 3 || gameState == 4) && confirm("Are you sure you want to return to menu?")) {
         enemyClear();
         chosenMap = [ 
@@ -132,10 +139,12 @@ function returnToMenuButtonFunction() {
         changeTowerColour(true, 10);
         TRAP.placed = false;
         playerBattleMedals += Math.floor(playerScore / 50000);
+        if (typeof saveCurrentUserData === "function") saveCurrentUserData();
         playerScore = 0;
         playerCash = 500;
         gameState = 1;
     } else if (gameState == 5 || gameState == 6) {
+        if (typeof saveCurrentUserData === "function") saveCurrentUserData();
         gameState = 1;
     }
 }

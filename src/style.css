@@ -75,3 +75,43 @@ canvas {
   padding: 20px;
   background: rgb(201, 87, 191);
 }
+
+.authInputClass {
+  height: 50px;
+  width: 320px;
+  font-size: 18px;
+  border: none;
+  border-radius: 12px;
+  padding: 10px;
+  background: rgb(235, 235, 235);
+  margin-bottom: 15px;
+}
+.authButtonClass {
+  height: 50px;
+  width: 240px;
+  font-size: 18px;
+  border: none;
+  border-radius: 25px;
+  padding: 10px;
+  background: rgb(63, 202, 202);
+  margin-bottom: 10px;
+}
+
+.authMessageClass {
+  color: rgb(255, 50, 50);
+  background: rgba(255, 200, 200, 0.8);
+  padding: 8px 12px;
+  border-radius: 8px;
+  width: 300px;
+  text-align: center;
+  font-weight: bold;
+  display: none;
+}
+.logoutButtonClass {
+  height: 40px;
+  width: 150px;
+  font-size: 16px;
+  border: none;
+  border-radius: 20px;
+  background: rgb(150, 150, 150);
+}
