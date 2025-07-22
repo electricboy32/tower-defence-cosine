@@ -5,28 +5,15 @@
 // GLOBALS for user authentication and data
 let currentUser = null;
 let currentUserData = null;
-let usersCache = null;
 
 // DOM elements for auth UI
 let authFormElements = {};
 
-// Load users object from localStorage
-function loadUsers() {
-    if (usersCache) return usersCache;
-    let usersJSON = localStorage.getItem("MTD_USERS");
-    if (usersJSON) {
-        usersCache = JSON.parse(usersJSON);
-        return usersCache;
-    } else {
-        usersCache = {};
-        return usersCache;
-    }
-}
-
-// Save users object back to localStorage
-function saveUsers(usersObj) {
-    usersCache = usersObj;
-    localStorage.setItem("MTD_USERS", JSON.stringify(usersObj));
+// --- API helpers using axios ---
+const API = axios.create({ baseURL: "http://localhost:3000" });
+async function apiPost(path, payload) {
+    const { data } = await API.post(path, payload);
+    return data;
 }
 
 // Simple password hashing (base64 for demo purposes)
@@ -40,42 +27,31 @@ function hashPassword(pw) {
 }
 
 // Attempt to login, returns true if successful, false otherwise
-function login(username, pw) {
-    let users = loadUsers();
-    if (users[username] && users[username].password === hashPassword(pw)) {
+async function login(username, pw) {
+    const res = await apiPost("/login", { username, password: hashPassword(pw) });
+    if (res.ok) {
         currentUser = username;
-        currentUserData = users[username];
-        // Inject user progress into in-memory globals
+        currentUserData = res.data;
         syncGlobalsWithUserData();
         return true;
+    } else {
+        return false;
     }
-    return false;
 }
 
 // Register a new user and log in
-function register(username, pw) {
-    let users = loadUsers();
-    if (users[username]) return false; // already exists
-    // Create default data
-    users[username] = {
-        password: hashPassword(pw),
-        medals: 0,
-        upgrades: {
-            projectileUpgrade: 0,
-            damageUpgrade: 0,
-            baseHealthUpgrade: 0,
-            enemySpeedUgrade: 0,
-            enemyArmourUpgrade: 0,
-            specialAbilityUpgrade: 0
-        },
-        ratings: [] // Will be initialized to match 'levels' structure on login
-    };
-    saveUsers(users);
-    return login(username, pw);
+async function register(username, pw) {
+    const reg = await apiPost("/register", { username, password: hashPassword(pw) });
+    if (reg.ok) {
+        // Auto-login after registration
+        return await login(username, pw);
+    } else {
+        return false;
+    }
 }
 
 // Save current global variables back to currentUserData and disk
-function saveCurrentUserData() {
+async function saveCurrentUserData() {
     if (!currentUser || !currentUserData) return;
     // Update from globals
     currentUserData.medals = (typeof playerBattleMedals !== "undefined") ? playerBattleMedals : 0;
@@ -94,10 +70,8 @@ function saveCurrentUserData() {
             )
         );
     }
-    // Write to localStorage
-    let users = loadUsers();
-    users[currentUser] = currentUserData;
-    saveUsers(users);
+    // Write to server
+    await apiPost("/save", { username: currentUser, data: currentUserData });
 }
 
 // Load user data into global variables after login
@@ -147,26 +121,24 @@ function showAuthUI() {
     authFormElements.usernameInput = createInput('');
     authFormElements.usernameInput.position(centerX - formWidth/2 + 25, centerY - 60);
     authFormElements.usernameInput.attribute("placeholder", "Username");
-    authFormElements.usernameInput.class("auth-input");
+    authFormElements.usernameInput.class("mainMenuButtonClass");
 
     // Password input
     authFormElements.passwordInput = createInput('', 'password');
     authFormElements.passwordInput.position(centerX - formWidth/2 + 25, centerY - 20);
     authFormElements.passwordInput.attribute("placeholder", "Password");
-    authFormElements.passwordInput.class("auth-input");
+    authFormElements.passwordInput.class("mainMenuButtonClass");
 
     // Login button
     authFormElements.loginBtn = createButton('Login');
     authFormElements.loginBtn.position(centerX - formWidth/2 + 25, centerY + 30);
-    authFormElements.loginBtn.class("auth-btn");
+    authFormElements.loginBtn.class("mainMenuButtonClass");
     authFormElements.loginBtn.mousePressed(function() {
         handleAuthSubmit("login");
     });
 
     // Register button
-    authFormElements.registerBtn = createButton('Register');
-    authFormElements.registerBtn.position(centerX - formWidth/2 + 125, centerY + 30);
-    authFormElements.registerBtn.class("auth-btn");
+    authFormElements.registerBtn.class("mainMenuButtonClass");
     authFormElements.registerBtn.mousePressed(function() {
         handleAuthSubmit("register");
     });
@@ -174,7 +146,6 @@ function showAuthUI() {
     // Message
     authFormElements.message = createP('');
     authFormElements.message.position(centerX - formWidth/2 + 25, centerY + 70);
-    authFormElements.message.class("auth-message");
 
     // Attach a pseudo-form object for easier hide/show
     authFormElements.form = true;
