@@ -132,11 +132,7 @@ function showAuthUI() {
     // Center the form on canvas
     let centerX = 928, centerY = 432, formWidth = 330;
 
-    // Message paragraph: create but hide (used for future expansion only)
-    authFormElements.message = createP('');
-    authFormElements.message.class('authMessageClass');
-    authFormElements.message.position(centerX - 150, centerY + 90);
-    authFormElements.message.hide();
+    // (message element removed)
 
     // Username input
     authFormElements.usernameInput = createInput('');
@@ -170,8 +166,7 @@ function showAuthUI() {
         handleAuthSubmit("register");
     });
 
-    // Move message paragraph to centerY+170 and center
-    authFormElements.message.position(centerX - 170, centerY + 170);
+    // (message element removed)
 
     // Attach a pseudo-form object for easier hide/show
     authFormElements.form = true;
@@ -206,7 +201,7 @@ function handleAuthSubmit(type) {
     if (!authFormElements.usernameInput || !authFormElements.passwordInput) return;
     let username = authFormElements.usernameInput.value().trim();
     let pw = authFormElements.passwordInput.value();
-    if (authFormElements.message) authFormElements.message.hide();
+    // (message element removed)
     if (!username || !pw) {
         alert("Please enter both fields.");
         return;
