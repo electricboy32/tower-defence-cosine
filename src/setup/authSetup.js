@@ -139,38 +139,38 @@ function showAuthUI() {
 
     // Username input
     authFormElements.usernameInput = createInput('');
-    authFormElements.usernameInput.position(centerX - 150, centerY - 90);
+    authFormElements.usernameInput.position(centerX - 160, centerY - 110);
     authFormElements.usernameInput.attribute("placeholder", "Username");
     authFormElements.usernameInput.class("authInputClass");
-    authFormElements.usernameInput.size(300, 50);
+    authFormElements.usernameInput.size(320, 50);
 
     // Password input
     authFormElements.passwordInput = createInput('', 'password');
-    authFormElements.passwordInput.position(centerX - 150, centerY - 30);
+    authFormElements.passwordInput.position(centerX - 160, centerY - 40);
     authFormElements.passwordInput.attribute("placeholder", "Password");
     authFormElements.passwordInput.class("authInputClass");
-    authFormElements.passwordInput.size(300, 50);
+    authFormElements.passwordInput.size(320, 50);
 
     // Login button
     authFormElements.loginBtn = createButton('Login');
-    authFormElements.loginBtn.position(centerX - 240, centerY + 20);
+    authFormElements.loginBtn.position(centerX - 100, centerY + 40);
     authFormElements.loginBtn.class("authButtonClass");
-    authFormElements.loginBtn.size(200, 50);
+    authFormElements.loginBtn.size(240, 50);
     authFormElements.loginBtn.mousePressed(function() {
         handleAuthSubmit("login");
     });
 
     // Register button
     authFormElements.registerBtn = createButton('Register');
-    authFormElements.registerBtn.position(centerX + 40, centerY + 20);
+    authFormElements.registerBtn.position(centerX - 100, centerY + 100);
     authFormElements.registerBtn.class("authButtonClass");
-    authFormElements.registerBtn.size(200, 50);
+    authFormElements.registerBtn.size(240, 50);
     authFormElements.registerBtn.mousePressed(function() {
         handleAuthSubmit("register");
     });
 
-    // Move message paragraph to centerY+90.
-    authFormElements.message.position(centerX - 150, centerY + 90);
+    // Move message paragraph to centerY+170 and center
+    authFormElements.message.position(centerX - 170, centerY + 170);
 
     // Attach a pseudo-form object for easier hide/show
     authFormElements.form = true;

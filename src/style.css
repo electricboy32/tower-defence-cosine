@@ -78,21 +78,23 @@ canvas {
 
 .authInputClass {
   height: 50px;
-  width: 300px;
+  width: 320px;
   font-size: 18px;
   border: none;
   border-radius: 12px;
   padding: 10px;
   background: rgb(235, 235, 235);
+  margin-bottom: 10px;
 }
 .authButtonClass {
   height: 50px;
-  width: 200px;
+  width: 240px;
   font-size: 18px;
   border: none;
   border-radius: 25px;
   padding: 10px;
   background: rgb(63, 202, 202);
+  margin-bottom: 10px;
 }
 
 .authMessageClass {
