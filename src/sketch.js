@@ -77,6 +77,7 @@ function draw() {
         specialForcesUpdate();
         enemySetup(0);
         enemyUpdateCampaign();
+        checkCampaignLevelComplete(); // <-- Call after enemy updates for campaign only
         showSpecialForces();
         showAirstrike();
         showTrap();
