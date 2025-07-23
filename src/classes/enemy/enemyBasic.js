@@ -2,6 +2,9 @@
 
 "use strict";
 
+// Global slowdown factor for enemy movement speed (tweakable)
+const SPEED_MULTIPLIER = 0.8;
+
 class enemyBasic {
 
   // Constructor method for the class.
@@ -12,7 +15,8 @@ class enemyBasic {
     this.nextY = MAP_TILE_Y[4];
     this.health = health;
     this.healthMax = health;
-    this.speed = speed * (1 - upgradePercent(enemySpeedUgrade)); // The rate at which the enemy moves to the text square.
+    // The rate at which the enemy moves to the next square, globally slowed by SPEED_MULTIPLIER
+    this.speed = speed * SPEED_MULTIPLIER * (1 - upgradePercent(enemySpeedUgrade));
     this.colour = colour;
     this.map = map; // Current map.
     this.mapPassed = [ // Tracks where the enemy has already been on the map so it doesn't go back on itself.
