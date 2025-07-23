@@ -382,7 +382,7 @@ function checkBaseHealth() {
     airstrikeCheck = false;
     airstrikeCheckCoordCheck = false;
     campaignCheck = false;
-    let tempText = "The game is over. Your score was " + playerScore.toString() + ". Press 'Ok' to restart or press 'Cancel' to return to the menu and/or select another map.";
+    let tempText = "Game over! Your final score was " + playerScore.toString() + ".\n\nPress 'OK' to play again or 'Cancel' to return to the main menu and choose another map.";
     playerBattleMedals += Math.floor(playerScore / 50000);
     if (typeof saveCurrentUserData === "function") saveCurrentUserData();
     playerScore = 0;
