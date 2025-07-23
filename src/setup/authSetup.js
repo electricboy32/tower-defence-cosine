@@ -4,6 +4,7 @@ const fs = require('fs');
 const path = require('path');
 const DATA_DIR = path.join(__dirname, '..', 'data');
 const DATA_PATH = path.join(DATA_DIR, 'userinfo.json');
+const MIN_PASSWORD_LENGTH = 8;
 
 // Show a SweetAlert2 modal, fallback to alert if Swal is missing
 function showGameDialog(title, message, icon = 'warning') {
@@ -11,6 +12,45 @@ function showGameDialog(title, message, icon = 'warning') {
     Swal.fire({ title, text: message, icon, confirmButtonText: 'OK' });
   } else {
     alert(title + "\n\n" + message); // graceful fallback
+  }
+}
+
+// Show password requirements as a toast/banner at top of screen
+let passwordReqDiv = null;
+function showPasswordRequirements() {
+  const msg = "Password must be at least 8 characters long and include uppercase, lowercase and a number.";
+  if (typeof Swal !== 'undefined') {
+    Swal.fire({
+      toast: true,
+      position: 'top',
+      icon: 'info',
+      title: msg,
+      showConfirmButton: false,
+      timer: 6000,
+      timerProgressBar: true
+    });
+  } else {
+    if (!passwordReqDiv) {
+      passwordReqDiv = createDiv(msg);
+      passwordReqDiv.position(0, 0);
+      passwordReqDiv.style('width', '100%');
+      passwordReqDiv.style('padding', '12px 0');
+      passwordReqDiv.style('background', '#333');
+      passwordReqDiv.style('color', '#fff');
+      passwordReqDiv.style('font-size', '16px');
+      passwordReqDiv.style('text-align', 'center');
+      passwordReqDiv.style('z-index', '9999');
+      passwordReqDiv.style('position', 'fixed');
+      passwordReqDiv.style('left', '0');
+      passwordReqDiv.style('top', '0');
+      passwordReqDiv.style('box-shadow', '0 2px 8px rgba(0,0,0,0.2)');
+      passwordReqDiv.hide();
+    }
+    passwordReqDiv.html(msg);
+    passwordReqDiv.show();
+    setTimeout(() => {
+      if (passwordReqDiv) passwordReqDiv.hide();
+    }, 6000);
   }
 }
 
@@ -45,6 +85,12 @@ function hashPassword(pw) {
     }
 }
 
+// Returns true if password meets security requirements
+function isPasswordValid(pw) {
+    const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
+    return regex.test(pw);
+}
+
 // Returns true if login success, else false
 function login(username, pw) {
     const users = loadUsersFromFile();
@@ -61,6 +107,7 @@ function login(username, pw) {
 function register(username, pw) {
     const users = loadUsersFromFile();
     if (users[username]) return false;
+    if (!isPasswordValid(pw)) return false;
     users[username] = {
         password: hashPassword(pw),
         medals: 0,
@@ -157,6 +204,9 @@ function showAuthUI() {
     authFormElements.passwordInput.class("authInputClass");
     authFormElements.passwordInput.size(320, 50);
 
+    // Show password requirements as toast/banner on focus
+    authFormElements.passwordInput.elt.addEventListener('focus', showPasswordRequirements);
+
     // Login button
     authFormElements.loginBtn = createButton('Login');
     authFormElements.loginBtn.position(centerX - 100, centerY + 40);
@@ -238,6 +288,10 @@ function handleAuthSubmit(type) {
     } else if (type === "register") {
         if (users[username]) {
             showGameDialog('Username Already Exists', 'Username already exists.');
+            return;
+        }
+        if (!isPasswordValid(pw)) {
+            showGameDialog('Invalid Password', 'Password must be at least 8 characters long and include uppercase, lowercase and a number.');
             return;
         }
         let ok = register(username, pw);
