@@ -15,6 +15,45 @@ function showGameDialog(title, message, icon = 'warning') {
   }
 }
 
+// Show password requirements as a toast/banner at top of screen
+let passwordReqDiv = null;
+function showPasswordRequirements() {
+  const msg = "Password must be at least 8 characters long and include uppercase, lowercase and a number.";
+  if (typeof Swal !== 'undefined') {
+    Swal.fire({
+      toast: true,
+      position: 'top',
+      icon: 'info',
+      title: msg,
+      showConfirmButton: false,
+      timer: 6000,
+      timerProgressBar: true
+    });
+  } else {
+    if (!passwordReqDiv) {
+      passwordReqDiv = createDiv(msg);
+      passwordReqDiv.position(0, 0);
+      passwordReqDiv.style('width', '100%');
+      passwordReqDiv.style('padding', '12px 0');
+      passwordReqDiv.style('background', '#333');
+      passwordReqDiv.style('color', '#fff');
+      passwordReqDiv.style('font-size', '16px');
+      passwordReqDiv.style('text-align', 'center');
+      passwordReqDiv.style('z-index', '9999');
+      passwordReqDiv.style('position', 'fixed');
+      passwordReqDiv.style('left', '0');
+      passwordReqDiv.style('top', '0');
+      passwordReqDiv.style('box-shadow', '0 2px 8px rgba(0,0,0,0.2)');
+      passwordReqDiv.hide();
+    }
+    passwordReqDiv.html(msg);
+    passwordReqDiv.show();
+    setTimeout(() => {
+      if (passwordReqDiv) passwordReqDiv.hide();
+    }, 6000);
+  }
+}
+
 // Ensure data directory and file exists
 if (!fs.existsSync(DATA_DIR)) fs.mkdirSync(DATA_DIR, { recursive: true });
 if (!fs.existsSync(DATA_PATH)) fs.writeFileSync(DATA_PATH, '{}');
@@ -165,20 +204,8 @@ function showAuthUI() {
     authFormElements.passwordInput.class("authInputClass");
     authFormElements.passwordInput.size(320, 50);
 
-    // Password requirements info div (hidden by default)
-    authFormElements.passwordInfo = createDiv("Password must be at least 8 characters long and include uppercase, lowercase and a number.");
-    authFormElements.passwordInfo.position(centerX - 160, centerY - 60 + 60);
-    authFormElements.passwordInfo.size(320);
-    authFormElements.passwordInfo.class("passwordInfoClass");
-    authFormElements.passwordInfo.style("display", "none");
-
-    // Show info on password input focus, hide on blur
-    authFormElements.passwordInput.elt.addEventListener('focus', () => {
-        authFormElements.passwordInfo.style("display", "block");
-    });
-    authFormElements.passwordInput.elt.addEventListener('blur', () => {
-        authFormElements.passwordInfo.style("display", "none");
-    });
+    // Show password requirements as toast/banner on focus
+    authFormElements.passwordInput.elt.addEventListener('focus', showPasswordRequirements);
 
     // Login button
     authFormElements.loginBtn = createButton('Login');
