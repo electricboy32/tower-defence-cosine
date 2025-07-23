@@ -171,11 +171,25 @@ function syncGlobalsWithUserData() {
     }
 }
 
+// --- AUTH MODE STATE ---
+let authMode = 'login'; // 'login' or 'register'
+
+/** Switch between login/register auth modes and rebuild UI */
+function switchAuthMode(mode) {
+    if (authMode !== mode) {
+        authMode = mode;
+        hideAuthUI();
+        authFormElements = {};
+        showAuthUI();
+    }
+}
+
 // Auth UI creation/destroy logic
 function showAuthUI() {
     hideAllGameDOM();
-    // Don't create again if already exists
-    if (authFormElements.form) {
+
+    // If form for this mode is already displayed, just show and return
+    if (authFormElements.form && authFormElements.mode === authMode) {
         for (let key in authFormElements) {
             if (authFormElements[key] && typeof authFormElements[key].show === "function") {
                 authFormElements[key].show();
@@ -185,49 +199,97 @@ function showAuthUI() {
         }
         return;
     }
+
+    // Hide old elements if any and clear
+    hideAuthUI();
+    authFormElements = {};
+
     // Center the form on canvas
     let centerX = 928, centerY = 432, formWidth = 330;
 
-    // (message element removed)
+    if (authMode === "login") {
+        // LOGIN FORM
 
-    // Username input
-    authFormElements.usernameInput = createInput('');
-    authFormElements.usernameInput.position(centerX - 160, centerY - 150);
-    authFormElements.usernameInput.attribute("placeholder", "Username");
-    authFormElements.usernameInput.class("authInputClass");
-    authFormElements.usernameInput.size(320, 50);
+        // Username input
+        authFormElements.usernameInput = createInput('');
+        authFormElements.usernameInput.position(centerX - 160, centerY - 150);
+        authFormElements.usernameInput.attribute("placeholder", "Username");
+        authFormElements.usernameInput.class("authInputClass");
+        authFormElements.usernameInput.size(320, 50);
 
-    // Password input
-    authFormElements.passwordInput = createInput('', 'password');
-    authFormElements.passwordInput.position(centerX - 160, centerY - 60);
-    authFormElements.passwordInput.attribute("placeholder", "Password");
-    authFormElements.passwordInput.class("authInputClass");
-    authFormElements.passwordInput.size(320, 50);
+        // Password input (NO password requirements popup)
+        authFormElements.passwordInput = createInput('', 'password');
+        authFormElements.passwordInput.position(centerX - 160, centerY - 60);
+        authFormElements.passwordInput.attribute("placeholder", "Password");
+        authFormElements.passwordInput.class("authInputClass");
+        authFormElements.passwordInput.size(320, 50);
 
-    // Show password requirements as toast/banner on focus
-    authFormElements.passwordInput.elt.addEventListener('focus', showPasswordRequirements);
+        // Login button
+        authFormElements.loginBtn = createButton('Login');
+        authFormElements.loginBtn.position(centerX - 100, centerY + 40);
+        authFormElements.loginBtn.class("authButtonClass");
+        authFormElements.loginBtn.size(240, 50);
+        authFormElements.loginBtn.mousePressed(function() {
+            handleAuthSubmit("login");
+        });
 
-    // Login button
-    authFormElements.loginBtn = createButton('Login');
-    authFormElements.loginBtn.position(centerX - 100, centerY + 40);
-    authFormElements.loginBtn.class("authButtonClass");
-    authFormElements.loginBtn.size(240, 50);
-    authFormElements.loginBtn.mousePressed(function() {
-        handleAuthSubmit("login");
-    });
+        // Register button (switches to register mode)
+        authFormElements.registerBtn = createButton('Register');
+        authFormElements.registerBtn.position(centerX - 100, centerY + 110);
+        authFormElements.registerBtn.class("authButtonClass");
+        authFormElements.registerBtn.size(240, 50);
+        authFormElements.registerBtn.mousePressed(function() {
+            switchAuthMode("register");
+        });
 
-    // Register button
-    authFormElements.registerBtn = createButton('Register');
-    authFormElements.registerBtn.position(centerX - 100, centerY + 110);
-    authFormElements.registerBtn.class("authButtonClass");
-    authFormElements.registerBtn.size(240, 50);
-    authFormElements.registerBtn.mousePressed(function() {
-        handleAuthSubmit("register");
-    });
+    } else if (authMode === "register") {
+        // REGISTER FORM
 
-    // (message element removed)
+        // Username input
+        authFormElements.usernameInput = createInput('');
+        authFormElements.usernameInput.position(centerX - 160, centerY - 200);
+        authFormElements.usernameInput.attribute("placeholder", "Username");
+        authFormElements.usernameInput.class("authInputClass");
+        authFormElements.usernameInput.size(320, 50);
 
-    // Attach a pseudo-form object for easier hide/show
+        // Password input (pw1)
+        authFormElements.passwordInput = createInput('', 'password');
+        authFormElements.passwordInput.position(centerX - 160, centerY - 120);
+        authFormElements.passwordInput.attribute("placeholder", "Password");
+        authFormElements.passwordInput.class("authInputClass");
+        authFormElements.passwordInput.size(320, 50);
+
+        // Attach password requirements popup ONLY to this field
+        authFormElements.passwordInput.elt.addEventListener('focus', showPasswordRequirements);
+
+        // Confirm password input (pw2)
+        authFormElements.confirmPasswordInput = createInput('', 'password');
+        authFormElements.confirmPasswordInput.position(centerX - 160, centerY - 40);
+        authFormElements.confirmPasswordInput.attribute("placeholder", "Repeat Password");
+        authFormElements.confirmPasswordInput.class("authInputClass");
+        authFormElements.confirmPasswordInput.size(320, 50);
+
+        // Register submit button
+        authFormElements.registerSubmitBtn = createButton('Register');
+        authFormElements.registerSubmitBtn.position(centerX - 100, centerY + 60);
+        authFormElements.registerSubmitBtn.class("authButtonClass");
+        authFormElements.registerSubmitBtn.size(240, 50);
+        authFormElements.registerSubmitBtn.mousePressed(function() {
+            handleAuthSubmit("register");
+        });
+
+        // Back to Login button
+        authFormElements.backBtn = createButton('Back to Login');
+        authFormElements.backBtn.position(centerX - 100, centerY + 130);
+        authFormElements.backBtn.class("authButtonClass");
+        authFormElements.backBtn.size(240, 50);
+        authFormElements.backBtn.mousePressed(function() {
+            switchAuthMode("login");
+        });
+    }
+
+    // Track mode to allow UI reuse checks
+    authFormElements.mode = authMode;
     authFormElements.form = true;
 }
 
@@ -237,6 +299,15 @@ function hideAuthUI() {
             authFormElements[key].hide();
         } else if (authFormElements[key] && authFormElements[key].style) {
             authFormElements[key].style.display = "none";
+        }
+        // Remove password requirements popup listener if present (cleanup)
+        if (
+            key === "passwordInput" &&
+            authFormElements[key] &&
+            authFormElements[key].elt &&
+            typeof authFormElements[key].elt.removeEventListener === "function"
+        ) {
+            authFormElements[key].elt.removeEventListener('focus', showPasswordRequirements);
         }
     }
 }
@@ -260,12 +331,13 @@ function handleAuthSubmit(type) {
     if (!authFormElements.usernameInput || !authFormElements.passwordInput) return;
     let username = authFormElements.usernameInput.value().trim();
     let pw = authFormElements.passwordInput.value();
-    // (message element removed)
+
     if (!username || !pw) {
-        showGameDialog('Missing Information', 'Please enter both fields.');
+        showGameDialog('Missing Information', 'Please enter all required fields.');
         return;
     }
     const users = loadUsersFromFile();
+
     if (type === "login") {
         if (!users[username]) {
             showGameDialog('Account Not Found', 'Account not found. Please register.');
@@ -286,6 +358,20 @@ function handleAuthSubmit(type) {
             gameState = 1;
         }
     } else if (type === "register") {
+        // New: check both passwords present and match
+        if (!authFormElements.confirmPasswordInput) {
+            showGameDialog('Error', 'Repeat password field missing.');
+            return;
+        }
+        let confirmPw = authFormElements.confirmPasswordInput.value();
+        if (!confirmPw) {
+            showGameDialog('Missing Information', 'Please repeat your password.');
+            return;
+        }
+        if (pw !== confirmPw) {
+            showGameDialog('Passwords Do Not Match', 'The passwords you entered do not match. Please try again.');
+            return;
+        }
         if (users[username]) {
             showGameDialog('Username Already Exists', 'Username already exists.');
             return;
