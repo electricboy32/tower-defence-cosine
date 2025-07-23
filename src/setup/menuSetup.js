@@ -86,7 +86,7 @@ function returnToMenuButtonFunction() {
     // Save user data on menu return
     if (typeof saveCurrentUserData === "function") saveCurrentUserData();
 
-    if ((gameState == 2 || gameState == 3 || gameState == 4) && confirm("Are you sure you want to return to menu?")) {
+    if ((gameState == 2 || gameState == 3 || gameState == 4) && confirm("Return to the main menu? Any current progress in this battle will be lost.")) {
         enemyClear();
         chosenMap = [ 
             [0,0,0,0,0,0,0,0,0],
