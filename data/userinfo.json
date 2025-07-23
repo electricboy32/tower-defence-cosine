@@ -1,1 +1,40 @@
-{}
+{
+  "admin": {
+    "password": "cGFzc3dvcmQ=",
+    "medals": 0,
+    "upgrades": {
+      "projectileUpgrade": 0,
+      "damageUpgrade": 0,
+      "baseHealthUpgrade": 0,
+      "enemySpeedUgrade": 0,
+      "enemyArmourUpgrade": 0,
+      "specialAbilityUpgrade": 0
+    },
+    "ratings": [
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    ]
+  }
+}
