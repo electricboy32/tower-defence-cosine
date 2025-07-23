@@ -3,7 +3,7 @@
 "use strict";
 
 // Global slowdown factor for enemy movement speed (tweakable)
-const SPEED_MULTIPLIER = 0.8;
+const SPEED_MULTIPLIER = 0.6;
 
 class enemyBasic {
 
