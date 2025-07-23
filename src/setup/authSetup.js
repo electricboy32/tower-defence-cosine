@@ -4,6 +4,7 @@ const fs = require('fs');
 const path = require('path');
 const DATA_DIR = path.join(__dirname, '..', 'data');
 const DATA_PATH = path.join(DATA_DIR, 'userinfo.json');
+const MIN_PASSWORD_LENGTH = 8;
 
 // Show a SweetAlert2 modal, fallback to alert if Swal is missing
 function showGameDialog(title, message, icon = 'warning') {
@@ -45,6 +46,12 @@ function hashPassword(pw) {
     }
 }
 
+// Returns true if password meets security requirements
+function isPasswordValid(pw) {
+    const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
+    return regex.test(pw);
+}
+
 // Returns true if login success, else false
 function login(username, pw) {
     const users = loadUsersFromFile();
@@ -61,6 +68,7 @@ function login(username, pw) {
 function register(username, pw) {
     const users = loadUsersFromFile();
     if (users[username]) return false;
+    if (!isPasswordValid(pw)) return false;
     users[username] = {
         password: hashPassword(pw),
         medals: 0,
@@ -153,7 +161,7 @@ function showAuthUI() {
     // Password input
     authFormElements.passwordInput = createInput('', 'password');
     authFormElements.passwordInput.position(centerX - 160, centerY - 60);
-    authFormElements.passwordInput.attribute("placeholder", "Password");
+    authFormElements.passwordInput.attribute("placeholder", "Password (8+ chars, upper/lower/number)");
     authFormElements.passwordInput.class("authInputClass");
     authFormElements.passwordInput.size(320, 50);
 
@@ -238,6 +246,10 @@ function handleAuthSubmit(type) {
     } else if (type === "register") {
         if (users[username]) {
             showGameDialog('Username Already Exists', 'Username already exists.');
+            return;
+        }
+        if (!isPasswordValid(pw)) {
+            showGameDialog('Invalid Password', 'Password must be at least 8 characters long and include uppercase, lowercase and a number.');
             return;
         }
         let ok = register(username, pw);
