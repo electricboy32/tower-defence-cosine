@@ -2,6 +2,7 @@
 
 const fs = require('fs');
 const path = require('path');
+const { ipcRenderer } = require('electron');
 const DATA_DIR = path.join(__dirname, '..', 'data');
 const DATA_PATH = path.join(DATA_DIR, 'userinfo.json');
 
