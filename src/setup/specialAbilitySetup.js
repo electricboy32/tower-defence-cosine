@@ -28,8 +28,6 @@ function specialAbilityButtonSetup() {
     specialAbilityButton.position(1750, 780);
     specialAbilityButton.class("towerRangeSpecialAbility");
     specialAbilityButton.mousePressed(() => specialAbilityButtonFunction(chosenMapInt));
-    // Hide special-ability button by default
-    specialAbilityButton.hide();
 }
 
 // Shows or hides the special ability buttons depending on the input.
