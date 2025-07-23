@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain, dialog } = require('electron');
+const { app, BrowserWindow } = require('electron');
 const path = require('path');
 
 app.setName('Military Tower Defence');
@@ -21,7 +21,3 @@ function createWindow () {
 }
 
 app.whenReady().then(createWindow);
-
-ipcMain.handle('show-dialog', async (_evt, { title, message }) => {
-  await dialog.showMessageBox({ type: 'info', buttons: ['OK'], title, message });
-});

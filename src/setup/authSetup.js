@@ -2,14 +2,16 @@
 
 const fs = require('fs');
 const path = require('path');
-const { ipcRenderer } = require('electron');
 const DATA_DIR = path.join(__dirname, '..', 'data');
 const DATA_PATH = path.join(DATA_DIR, 'userinfo.json');
 
-// Show a message box with a custom title using Electron, fallback to alert if needed
-function showGameDialog(title, message) {
-  if (ipcRenderer && ipcRenderer.invoke) ipcRenderer.invoke('show-dialog', { title, message });
-  else alert(message);
+// Show a SweetAlert2 modal, fallback to alert if Swal is missing
+function showGameDialog(title, message, icon = 'warning') {
+  if (typeof Swal !== 'undefined') {
+    Swal.fire({ title, text: message, icon, confirmButtonText: 'OK' });
+  } else {
+    alert(title + "\n\n" + message); // graceful fallback
+  }
 }
 
 // Ensure data directory and file exists
