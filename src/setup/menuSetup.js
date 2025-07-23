@@ -49,6 +49,9 @@ function menuButtonsSetup() {
     settingsButton.position(740, 625);
     settingsButton.class("mainMenuButtonClass");
     settingsButton.mousePressed(settingsButtonFunction);
+
+    mainMenuButtonsDisplay(false);
+    returnToMenuButtonDisplay(false);
 }
 
 // Shows or hides the return to menu button depending on the input

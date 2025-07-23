@@ -19,9 +19,7 @@ function setup() {
   skillTreeButtonsSetup();
   campaignButtonsSetup();
   specialAbilityButtonSetup();
-  // Hide all game DOM elements immediately after creation to prevent UI overlap in AUTH_STATE
-  if (typeof hideAllGameDOM === "function") hideAllGameDOM();
-}
+  }
 
 // Draw function from the p5.js library. This function runs 60 times per second and is used for animation (i.e. updating object positions, drawing map, etc.).
 function draw() {

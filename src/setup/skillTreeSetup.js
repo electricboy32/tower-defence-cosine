@@ -37,6 +37,8 @@ function skillTreeButtonsSetup() {
     specialAbilityUpgradeButton.position(740, 625);
     specialAbilityUpgradeButton.class("skillTreeButtonClass");
     specialAbilityUpgradeButton.mousePressed(() => skillTreeButtonsFunction(specialAbilityUpgrade, 5));
+
+    skillTreeButtonsDisplay(false);
 }
 
 // Shows or hides the skill tree buttons depending on the input.

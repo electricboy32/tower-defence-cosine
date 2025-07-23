@@ -86,6 +86,10 @@ function towerButtonsSetup() {
     displayRangeButon.position(1640, 780);
     displayRangeButon.class("towerRangeSpecialAbility");
     displayRangeButon.mousePressed(displayRangeButtonFunction);
+
+    towerButtonDisplay(false);
+    placeCancelButtonDisplay(false);
+    displayRangeButtonDisplay(false);
 }
 
 // Place's a tower at the x and y the user clicks.

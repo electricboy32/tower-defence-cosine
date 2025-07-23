@@ -271,6 +271,8 @@ function mapButtonsSetup() {
   gulfwarMapButton.position(1200, 550);
   gulfwarMapButton.class("mainMenuButtonClass");
   gulfwarMapButton.mousePressed(gulfwarMapButtonFunction);
+
+  mapButtonsDisplay(false);
 }
 
 // Toggles the map selection buttons on and off depending on the input.
