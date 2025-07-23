@@ -129,7 +129,16 @@ function checkCampaignLevelComplete() {
     }
 
     // 5. Show alert
-    alert("Level complete! You earned " + newRating + " star(s). Medals awarded: " + newRating);
+    if (typeof Swal !== 'undefined') {
+        Swal.fire({
+            title: 'Level Complete!',
+            text: "You earned " + newRating + " star(s). Medals awarded: " + newRating,
+            icon: 'success',
+            confirmButtonText: 'OK'
+        });
+    } else {
+        alert("Level complete! You earned " + newRating + " star(s). Medals awarded: " + newRating);
+    }
 
     // 6. Reset for return to level-select
     enemyClear();
