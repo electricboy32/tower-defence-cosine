@@ -161,9 +161,24 @@ function showAuthUI() {
     // Password input
     authFormElements.passwordInput = createInput('', 'password');
     authFormElements.passwordInput.position(centerX - 160, centerY - 60);
-    authFormElements.passwordInput.attribute("placeholder", "Password (8+ chars, upper/lower/number)");
+    authFormElements.passwordInput.attribute("placeholder", "Password");
     authFormElements.passwordInput.class("authInputClass");
     authFormElements.passwordInput.size(320, 50);
+
+    // Password requirements info div (hidden by default)
+    authFormElements.passwordInfo = createDiv("Password must be at least 8 characters long and include uppercase, lowercase and a number.");
+    authFormElements.passwordInfo.position(centerX - 160, centerY - 60 + 60);
+    authFormElements.passwordInfo.size(320);
+    authFormElements.passwordInfo.class("passwordInfoClass");
+    authFormElements.passwordInfo.style("display", "none");
+
+    // Show info on password input focus, hide on blur
+    authFormElements.passwordInput.elt.addEventListener('focus', () => {
+        authFormElements.passwordInfo.style("display", "block");
+    });
+    authFormElements.passwordInput.elt.addEventListener('blur', () => {
+        authFormElements.passwordInfo.style("display", "none");
+    });
 
     // Login button
     authFormElements.loginBtn = createButton('Login');
