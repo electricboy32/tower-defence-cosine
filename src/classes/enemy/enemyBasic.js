@@ -78,7 +78,8 @@ class enemyBasic {
         if (Math.abs(this.nextX - this.posX) < this.changeOfDirection) {
           this.posX = this.nextX;
         } else {
-          this.posX = cosineInterpolate(this.posX, this.nextX, this.speed);
+          // Use linear interpolation for steady, uniform movement across the tile.
+          this.posX = linearInterpolate(this.posX, this.nextX, this.speed);
         }
         break;
 
@@ -86,7 +87,8 @@ class enemyBasic {
         if (Math.abs(this.nextY - this.posY) < this.changeOfDirection) {
           this.posY = this.nextY;
         } else {
-          this.posY = cosineInterpolate(this.posY, this.nextY, this.speed);
+          // Use linear interpolation for steady, uniform movement across the tile.
+          this.posY = linearInterpolate(this.posY, this.nextY, this.speed);
         }
         break;
     }
