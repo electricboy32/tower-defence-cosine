@@ -41,6 +41,8 @@ function campaignButtonsSetup() {
         btn.mousePressed(() => campaignButtonsFunction(i));
         campaignLevelButtons.push(btn);
     }
+    // Hide campaign level buttons by default
+    campaignButtonsDisplay(false);
 }
 
 // Show/hide campaign level buttons and display star ratings
