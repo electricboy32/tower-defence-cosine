@@ -272,6 +272,16 @@ function showAuthUI() {
                 switchAuthMode("register");
             });
         } else if (authMode === "register") {
+            // Confirm password input (above Register/Back buttons)
+            authFormElements.confirmPasswordInput = createInput('', 'password');
+            authFormElements.confirmPasswordInput.position(widgetX, y);
+            authFormElements.confirmPasswordInput.attribute("placeholder", "Repeat Password");
+            authFormElements.confirmPasswordInput.class("authInputClass");
+            authFormElements.confirmPasswordInput.size(inputW, inputH);
+            authFormElements.confirmPasswordInput.style('z-index','10');
+
+            y += inputH + gap;
+
             // Register submit button
             authFormElements.registerSubmitBtn = createButton('Register');
             authFormElements.registerSubmitBtn.position(widgetX, y);
@@ -283,16 +293,6 @@ function showAuthUI() {
             });
 
             y += btnH + gap;
-
-            // Confirm password input
-            authFormElements.confirmPasswordInput = createInput('', 'password');
-            authFormElements.confirmPasswordInput.position(widgetX, y);
-            authFormElements.confirmPasswordInput.attribute("placeholder", "Repeat Password");
-            authFormElements.confirmPasswordInput.class("authInputClass");
-            authFormElements.confirmPasswordInput.size(inputW, inputH);
-            authFormElements.confirmPasswordInput.style('z-index','10');
-
-            y += inputH + gap;
 
             // Back to Login button
             authFormElements.backBtn = createButton('Back to Login');
@@ -311,7 +311,7 @@ function showAuthUI() {
         // Track mode for UI reuse checks
         authFormElements.mode = authMode;
         authFormElements.form = true;
-        authFormElements.compact = true;  // identify as compact variant
+        authFormElements.compact = true;
         return;
     }
 
