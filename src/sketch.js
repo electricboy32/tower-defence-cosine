@@ -30,13 +30,10 @@ function startGameButtonDisplay(show) {
 function startArcadeGame() {
   arcadeStarted = true;
   startGameButtonDisplay(false);
-  // Force each enemyQueue's timeElapsed so next spawn() immediately enqueues an enemy
-  if (typeof enemies !== "undefined" && Array.isArray(enemies)) {
-    for (let i = 0; i < enemies.length; i++) {
-      if (typeof enemies[i].spawnRate !== "undefined") {
-        enemies[i].timeElapsed = enemies[i].spawnRate + 1;
-      }
-    }
+  // Enqueue one basic enemy instantly, leave other spawn timers untouched
+  if (typeof enemies !== 'undefined' && enemies[0]) {
+    enemies[0].checkType();   // enqueue one basic soldier
+    enemies[0].timeElapsed = 0; // reset its timer so next spawn waits full period
   }
 }
 
@@ -142,6 +139,7 @@ function draw() {
         checkBaseHealth();
         displayBaseHealth(baseHealth, baseHealthMax);
         placeTowerFunction();
+        towerUpdate(); // Always call, so towers are visible in both phases
 
         // Arcade Build Phase logic
         if (!arcadeStarted) {
@@ -158,7 +156,6 @@ function draw() {
           startGameButtonDisplay(false);
           enemySpawn();
           enemyUpdate();
-          towerUpdate();
           specialForcesUpdate();
           enemySetup(1);
           showSpecialForces();
