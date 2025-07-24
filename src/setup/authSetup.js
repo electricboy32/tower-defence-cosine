@@ -228,7 +228,7 @@ function showAuthUI() {
         authFormElements.message.style('font-family', 'inherit');
         authFormElements.message.style('pointer-events', 'none'); // allow clicks to pass through
 
-        let y = widgetX + yStart;
+        let y = widgetY + yStart;
 
         // Username input
         authFormElements.usernameInput = createInput('');
