@@ -64,7 +64,6 @@ function draw() {
 
     // Loads the menu.
     case 1:
-      if (typeof hideAuthUI === "function") hideAuthUI();
       titleAndImageSetup();
       mainMenuButtonsDisplay(true);
       mapButtonsDisplay(false);
@@ -75,8 +74,15 @@ function draw() {
       skillTreeButtonsDisplay(false);
       campaignButtonsDisplay(false);
       specialAbilityButtonDisplay(false);
-      // Show logout if user logged in
-      if (typeof showLogoutButton === "function" && currentUser) showLogoutButton();
+
+      // Auth widget logic: show auth widget if not logged in, otherwise show logout
+      if (!currentUser) {
+        if (typeof showAuthUI === "function") showAuthUI();
+        if (typeof hideLogoutButton === "function") hideLogoutButton();
+      } else {
+        if (typeof hideAuthUI === "function") hideAuthUI();
+        if (typeof showLogoutButton === "function") showLogoutButton();
+      }
       break;
 
     // Loads the campaign game mode.

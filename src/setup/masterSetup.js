@@ -3,7 +3,8 @@
 "use strict";
 
 const AUTH_STATE = 0;
-let gameState = AUTH_STATE;
+// Start directly in the main menu
+let gameState = 1;
 
 let playerScore = 0;
 let playerCash = 500;
