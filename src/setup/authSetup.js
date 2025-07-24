@@ -292,16 +292,6 @@ function showAuthUI() {
         authFormElements.mode = authMode;
         authFormElements.form = true;
         return;
-    });
-
-            // Attach password requirements popup ONLY to this field
-            authFormElements.passwordInput.elt.addEventListener('focus', showPasswordRequirements);
-        }
-
-        // Track mode for UI reuse checks
-        authFormElements.mode = authMode;
-        authFormElements.form = true;
-        return;
     }
 
     // --- ELSE: not in main menu, keep existing behavior ---
