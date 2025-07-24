@@ -189,8 +189,20 @@ function showAuthUI() {
     const inMenu = (typeof gameState !== 'undefined' && gameState === 1);
 
     // If we're in the main menu, show compact widget in top-left
+    // --- Main-menu compact auth widget ---
     if (inMenu) {
-        // Don't hide game DOM, only hide old auth widget if any
+        // If the compact form for this mode is already present, just show & exit
+        if (authFormElements.form && authFormElements.compact && authFormElements.mode === authMode) {
+            for (let k in authFormElements) {
+                if (authFormElements[k] && typeof authFormElements[k].show === 'function') {
+                    authFormElements[k].show();
+                } else if (authFormElements[k] && authFormElements[k].style) {
+                    authFormElements[k].style.display = 'block';
+                }
+            }
+            return;
+        }
+        // Rebuild widget (first time or mode change)
         hideAuthUI();
         authFormElements = {};
 
@@ -199,7 +211,7 @@ function showAuthUI() {
         const btnW = 150, btnH = 40;   // match logout button
         const inputW = 150, inputH = 35;
         const startOffset = 70;  // more space below message
-        const gap = 18;          // more vertical gap
+        const gap = 24;          // even more vertical gap
 
         // Message
         authFormElements.message = createDiv("Login or make an account to save progress");
@@ -299,6 +311,7 @@ function showAuthUI() {
         // Track mode for UI reuse checks
         authFormElements.mode = authMode;
         authFormElements.form = true;
+        authFormElements.compact = true;  // identify as compact variant
         return;
     }
 
