@@ -211,7 +211,8 @@ function showAuthUI() {
         const btnW = 150, btnH = 40;   // match logout button
         const inputW = 150, inputH = 35;
         const gap = 24;          // consistent vertical gap
-        const initialOffset = inputH + gap;  // ensures banner->Username gap equals other gaps
+        const bannerHeight = 32; // approximate height of message div
+        const yStart = bannerHeight + gap;
 
         // Message
         authFormElements.message = createDiv("Login or make an account to save progress");
@@ -227,7 +228,7 @@ function showAuthUI() {
         authFormElements.message.style('font-family', 'inherit');
         authFormElements.message.style('pointer-events', 'none'); // allow clicks to pass through
 
-        let y = widgetY + initialOffset;
+        let y = widgetX + yStart;
 
         // Username input
         authFormElements.usernameInput = createInput('');
