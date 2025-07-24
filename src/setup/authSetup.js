@@ -198,7 +198,8 @@ function showAuthUI() {
         const widgetX = 40, widgetY = 15;
         const btnW = 150, btnH = 40;   // match logout button
         const inputW = 150, inputH = 35;
-        const gap = 12;
+        const startOffset = 70;  // more space below message
+        const gap = 18;          // more vertical gap
 
         // Message
         authFormElements.message = createDiv("Login or make an account to save progress");
@@ -210,11 +211,11 @@ function showAuthUI() {
         authFormElements.message.style('border-radius', '8px 8px 4px 4px');
         authFormElements.message.style('max-width', '260px');
         authFormElements.message.style('box-shadow', '0 2px 8px rgba(0,0,0,0.07)');
-        authFormElements.message.style('z-index', '1000'); // lower than inputs/buttons
+        authFormElements.message.style('z-index', '5'); // lower than inputs/buttons
         authFormElements.message.style('font-family', 'inherit');
         authFormElements.message.style('pointer-events', 'none'); // allow clicks to pass through
 
-        let y = widgetY + 50; // add more vertical space below message
+        let y = widgetY + startOffset; // more vertical space below message
 
         // Username input
         authFormElements.usernameInput = createInput('');
@@ -222,6 +223,7 @@ function showAuthUI() {
         authFormElements.usernameInput.attribute("placeholder", "Username");
         authFormElements.usernameInput.class("authInputClass");
         authFormElements.usernameInput.size(inputW, inputH);
+        authFormElements.usernameInput.style('z-index','10');
 
         y += inputH + gap;
 
@@ -231,6 +233,7 @@ function showAuthUI() {
         authFormElements.passwordInput.attribute("placeholder", "Password");
         authFormElements.passwordInput.class("authInputClass");
         authFormElements.passwordInput.size(inputW, inputH);
+        authFormElements.passwordInput.style('z-index','10');
 
         y += inputH + gap;
 
@@ -240,6 +243,7 @@ function showAuthUI() {
             authFormElements.loginBtn.position(widgetX, y);
             authFormElements.loginBtn.size(btnW, btnH);
             authFormElements.loginBtn.class("logoutButtonClass");
+            authFormElements.loginBtn.style('z-index','10');
             authFormElements.loginBtn.mousePressed(function() {
                 handleAuthSubmit("login");
             });
@@ -251,6 +255,7 @@ function showAuthUI() {
             authFormElements.registerBtn.position(widgetX, y);
             authFormElements.registerBtn.size(btnW, btnH);
             authFormElements.registerBtn.class("logoutButtonClass");
+            authFormElements.registerBtn.style('z-index','10');
             authFormElements.registerBtn.mousePressed(function() {
                 switchAuthMode("register");
             });
@@ -260,6 +265,7 @@ function showAuthUI() {
             authFormElements.registerSubmitBtn.position(widgetX, y);
             authFormElements.registerSubmitBtn.size(btnW, btnH);
             authFormElements.registerSubmitBtn.class("logoutButtonClass");
+            authFormElements.registerSubmitBtn.style('z-index','10');
             authFormElements.registerSubmitBtn.mousePressed(function() {
                 handleAuthSubmit("register");
             });
@@ -272,6 +278,7 @@ function showAuthUI() {
             authFormElements.confirmPasswordInput.attribute("placeholder", "Repeat Password");
             authFormElements.confirmPasswordInput.class("authInputClass");
             authFormElements.confirmPasswordInput.size(inputW, inputH);
+            authFormElements.confirmPasswordInput.style('z-index','10');
 
             y += inputH + gap;
 
@@ -280,6 +287,7 @@ function showAuthUI() {
             authFormElements.backBtn.position(widgetX, y);
             authFormElements.backBtn.size(btnW, btnH);
             authFormElements.backBtn.class("logoutButtonClass");
+            authFormElements.backBtn.style('z-index','10');
             authFormElements.backBtn.mousePressed(function() {
                 switchAuthMode("login");
             });
