@@ -324,6 +324,9 @@ function hideAllGameDOM() {
     if (typeof campaignButtonsDisplay === "function") campaignButtonsDisplay(false);
     if (typeof specialAbilityButtonDisplay === "function") specialAbilityButtonDisplay(false);
     if (window.logoutButton && typeof window.logoutButton.hide === "function") window.logoutButton.hide();
+
+    // Hide Arcade Start Game button if present
+    if (typeof startGameButtonDisplay === "function") startGameButtonDisplay(false);
 }
 
 // Handle login/register
