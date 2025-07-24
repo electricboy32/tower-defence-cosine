@@ -196,9 +196,9 @@ function showAuthUI() {
 
         // Widget X/Y follows logout button (X=40, Y=15 for top edge, 22 for button alignment)
         const widgetX = 40, widgetY = 15;
-        const inputW = 180, inputH = 30;
-        const btnW = 120, btnH = 35;
-        const gap = 8;
+        const btnW = 150, btnH = 40;   // match logout button
+        const inputW = 150, inputH = 35;
+        const gap = 12;
 
         // Message
         authFormElements.message = createDiv("Login or make an account to save progress");
@@ -210,15 +210,17 @@ function showAuthUI() {
         authFormElements.message.style('border-radius', '8px 8px 4px 4px');
         authFormElements.message.style('max-width', '260px');
         authFormElements.message.style('box-shadow', '0 2px 8px rgba(0,0,0,0.07)');
-        authFormElements.message.style('z-index', '1002');
+        authFormElements.message.style('z-index', '1000'); // lower than inputs/buttons
         authFormElements.message.style('font-family', 'inherit');
+        authFormElements.message.style('pointer-events', 'none'); // allow clicks to pass through
 
-        let y = widgetY + 32; // below message
+        let y = widgetY + 50; // add more vertical space below message
 
         // Username input
         authFormElements.usernameInput = createInput('');
         authFormElements.usernameInput.position(widgetX, y);
         authFormElements.usernameInput.attribute("placeholder", "Username");
+        authFormElements.usernameInput.class("authInputClass");
         authFormElements.usernameInput.size(inputW, inputH);
 
         y += inputH + gap;
@@ -227,6 +229,7 @@ function showAuthUI() {
         authFormElements.passwordInput = createInput('', 'password');
         authFormElements.passwordInput.position(widgetX, y);
         authFormElements.passwordInput.attribute("placeholder", "Password");
+        authFormElements.passwordInput.class("authInputClass");
         authFormElements.passwordInput.size(inputW, inputH);
 
         y += inputH + gap;
@@ -236,16 +239,18 @@ function showAuthUI() {
             authFormElements.loginBtn = createButton('Login');
             authFormElements.loginBtn.position(widgetX, y);
             authFormElements.loginBtn.size(btnW, btnH);
+            authFormElements.loginBtn.class("logoutButtonClass");
             authFormElements.loginBtn.mousePressed(function() {
                 handleAuthSubmit("login");
             });
 
-            y += btnH + 2;
+            y += btnH + gap;
 
             // Register button (switches to register mode)
             authFormElements.registerBtn = createButton('Register');
             authFormElements.registerBtn.position(widgetX, y);
             authFormElements.registerBtn.size(btnW, btnH);
+            authFormElements.registerBtn.class("logoutButtonClass");
             authFormElements.registerBtn.mousePressed(function() {
                 switchAuthMode("register");
             });
@@ -254,16 +259,18 @@ function showAuthUI() {
             authFormElements.registerSubmitBtn = createButton('Register');
             authFormElements.registerSubmitBtn.position(widgetX, y);
             authFormElements.registerSubmitBtn.size(btnW, btnH);
+            authFormElements.registerSubmitBtn.class("logoutButtonClass");
             authFormElements.registerSubmitBtn.mousePressed(function() {
                 handleAuthSubmit("register");
             });
 
-            y += btnH + 2;
+            y += btnH + gap;
 
             // Confirm password input
             authFormElements.confirmPasswordInput = createInput('', 'password');
             authFormElements.confirmPasswordInput.position(widgetX, y);
             authFormElements.confirmPasswordInput.attribute("placeholder", "Repeat Password");
+            authFormElements.confirmPasswordInput.class("authInputClass");
             authFormElements.confirmPasswordInput.size(inputW, inputH);
 
             y += inputH + gap;
@@ -272,9 +279,20 @@ function showAuthUI() {
             authFormElements.backBtn = createButton('Back to Login');
             authFormElements.backBtn.position(widgetX, y);
             authFormElements.backBtn.size(btnW, btnH);
+            authFormElements.backBtn.class("logoutButtonClass");
             authFormElements.backBtn.mousePressed(function() {
                 switchAuthMode("login");
             });
+
+            // Attach password requirements popup ONLY to this field
+            authFormElements.passwordInput.elt.addEventListener('focus', showPasswordRequirements);
+        }
+
+        // Track mode for UI reuse checks
+        authFormElements.mode = authMode;
+        authFormElements.form = true;
+        return;
+    });
 
             // Attach password requirements popup ONLY to this field
             authFormElements.passwordInput.elt.addEventListener('focus', showPasswordRequirements);
