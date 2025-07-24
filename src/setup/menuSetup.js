@@ -142,6 +142,12 @@ function returnToMenuButtonFunction() {
         if (typeof saveCurrentUserData === "function") saveCurrentUserData();
         playerScore = 0;
         playerCash = 500;
+
+        // --- Arcade Build Phase reset ---
+        if (typeof arcadeStarted !== "undefined") arcadeStarted = false;
+        if (typeof arcadeInfoShown !== "undefined") arcadeInfoShown = false;
+        if (typeof startGameButtonDisplay === "function") startGameButtonDisplay(false);
+
         gameState = 1;
     } else if (gameState == 5 || gameState == 6) {
         if (typeof saveCurrentUserData === "function") saveCurrentUserData();

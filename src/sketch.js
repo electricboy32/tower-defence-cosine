@@ -11,6 +11,32 @@ function preload() {
 }
 
 // Setup function from the p5.js library. This function is run once at the start of the program and never again, so it is used for creating the canvas, etc.
+let arcadeStarted = false;      // false = Build Phase, true = active gameplay
+let arcadeInfoShown = false;    // ensures we only show the dialog once per run
+let startGameButton = null;
+
+// Helper: Show/hide Start Game button
+function startGameButtonDisplay(show) {
+  if (startGameButton) {
+    if (show) {
+      startGameButton.show();
+    } else {
+      startGameButton.hide();
+    }
+  }
+}
+
+// Helper: Called when Start Game button is pressed
+function startArcadeGame() {
+  arcadeStarted = true;
+  startGameButtonDisplay(false);
+  // Enqueue one basic enemy instantly, leave other spawn timers untouched
+  if (typeof enemies !== 'undefined' && enemies[0]) {
+    enemies[0].checkType();   // enqueue one basic soldier
+    enemies[0].timeElapsed = 0; // reset its timer so next spawn waits full period
+  }
+}
+
 function setup() {
   createCanvas(1856, 864);
   menuButtonsSetup();
@@ -19,6 +45,13 @@ function setup() {
   skillTreeButtonsSetup();
   campaignButtonsSetup();
   specialAbilityButtonSetup();
+
+  // Create Start Game button for Arcade Build Phase
+  startGameButton = createButton('Start Game');
+  startGameButton.position(860, 780);  // Centered at bottom
+  startGameButton.class('mainMenuButtonClass');
+  startGameButton.mousePressed(startArcadeGame);
+  startGameButton.hide();
 }
 
 // Draw function from the p5.js library. This function runs 60 times per second and is used for animation (i.e. updating object positions, drawing map, etc.).
@@ -92,7 +125,8 @@ function draw() {
         mainMenuButtonsDisplay(false);
         returnToMenuButtonDisplay(true);
         setBaseHealth(1000);
-      } else{
+        startGameButtonDisplay(false);
+      } else {
         specialAbilityButton.html(returnSpecialAbilityName());
         mapButtonsDisplay(false);
         mainMenuButtonsDisplay(false);
@@ -105,15 +139,30 @@ function draw() {
         checkBaseHealth();
         displayBaseHealth(baseHealth, baseHealthMax);
         placeTowerFunction();
-        enemySpawn();
-        enemyUpdate();
-        towerUpdate();
-        specialForcesUpdate();
-        enemySetup(1);
-        showSpecialForces();
-        showAirstrike();
-        showTrap();
-        trapFunction();
+        towerUpdate(); // Always call, so towers are visible in both phases
+
+        // Arcade Build Phase logic
+        if (!arcadeStarted) {
+          // Show info dialog once per run
+          if (!arcadeInfoShown) {
+            if (typeof showGameDialog === "function") {
+              showGameDialog('Build Phase', 'You have time to place your initial towers. Press Start Game when you\'re ready.', 'info');
+            }
+            arcadeInfoShown = true;
+          }
+          startGameButtonDisplay(true);
+          // NO enemySpawn, enemyUpdate, specialForcesUpdate, etc. in Build Phase!
+        } else {
+          startGameButtonDisplay(false);
+          enemySpawn();
+          enemyUpdate();
+          specialForcesUpdate();
+          enemySetup(1);
+          showSpecialForces();
+          showAirstrike();
+          showTrap();
+          trapFunction();
+        }
       }
       break;
 
